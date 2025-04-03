@@ -1,0 +1,24 @@
+{
+  "name": "final-project-deployment-matthew2022rta-1",
+  "version": "1.0.0",
+  "description": "[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=18986421) The content below is an example project proposal / requirements document. Replace the text below the lines marked \"**TODO**\" with details specific to your project. Remove the \"TODO\" lines.",
+  "main": "index.js",
+ "scripts": {
+  "test": "mocha test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta/issues"
+  },
+  "homepage": "https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta#readme",
+  "devDependencies": {
+    "chai": "^5.2.0",
+    "mocha": "^11.1.0"
+  }
+}
