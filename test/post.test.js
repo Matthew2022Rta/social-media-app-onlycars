@@ -1,4 +1,5 @@
 // test/post.test.js
+//added tests
 import mongoose from 'mongoose';
 import Post from '../models/Post.mjs';
 
