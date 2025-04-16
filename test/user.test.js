@@ -1,16 +1,22 @@
-const chai = require('chai');
-const expect = chai.expect;
+import mongoose from 'mongoose';
+import User from '../models/User.mjs';
 
-describe('User Model', function() {
-  it('should be able to create a user', function() {
-    // Assuming you have a User model in `models/User.mjs`
-    const User = require('../models/User.mjs');
-    const newUser = new User({
-      username: 'testuser',
-      email: 'test@example.com'
+describe('User Model', function () {
+  before(async function () {
+    await mongoose.connect('mongodb://127.0.0.1:27017/test');
+  });
+
+  after(async function () {
+    await mongoose.connection.db.dropDatabase();
+    await mongoose.disconnect();
+  });
+
+  it('should be invalid with no username', function (done) {
+    const u = new User();
+
+    u.validate((err) => {
+      if (err && err.errors.username) done(); // ✅ test passes
+      else done(new Error('Expected username error'));
     });
-
-    expect(newUser.username).to.equal('testuser');
-    expect(newUser.email).to.equal('test@example.com');
   });
 });

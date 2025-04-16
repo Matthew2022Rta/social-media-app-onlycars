@@ -3,26 +3,54 @@ import express from 'express';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import User from './models/User.mjs'
+import Post from './models/Post.mjs';
 import hbs from 'hbs'
-await mongoose.connect('mongodb://localhost/scratch;')
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+const port = process.env.PORT || 3000;
+await mongoose.connect(process.env.MONGO_URL);
+
+
+
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+  }
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/'),
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+  });
+  const upload = multer({ storage });
+
+//await mongoose.connect('mongodb://localhost/scratch;')
 const app=express() ;
 app.set('view engine','hbs')
 app.use(express.urlencoded({extended:true}))
 
+app.use(express.static('public'));
 
+  
 const sessionoptions={
          secret:"secret to saving session ID",
          saveUninitialized :false,
-  resave:false
+         resave:false
 }
 app.use(session(sessionoptions))
     // }
-
+ app.use('/uploads', express.static('uploads'));
 app.use(express.json())
 
-app.get("/",function(req,res){
-    res.render('signup')
-
+app.get("/", async (req, res) => {
+    const allPosts = await Post.find({});
+    res.render("homepage", { posts: allPosts });
+  });
+app.get("/signup",function(req,res){
+    res.render('signup');
 })
 
 app.post('/signup',async(req,res)=>{
@@ -42,26 +70,25 @@ app.get('/login',function(req,res){
 
 })
 
-app.post('/api/login',async(req,res)=>{
-    const { username } = req.body
-    console.log(req.body)
-
-    //the following call to findone expects a string for a password and username
-    //however if we pass in an object, we can manipulate the query to use a mongodb operator that is not just equality(as is the case with a simple name and value pair)
-    //example:password:{$ne:1} will be interpreted as any password thats not equal to 1
-    const user=await User.findOne({username})
-    const lit = await User.find({}, 'username password');
-    if(user){
-        req.session.username =user.username
-        req.session.password=user.password
-        res.render('welcome',{'name':user.username,'password':user.password,'list':lit})
-
+app.post('/api/login', async (req, res) => {
+    const { username } = req.body;
+    const user = await User.findOne({ username });
+  
+    if (user) {
+      req.session.username = user.username;
+      req.session.password = user.password;
+  
+      const allPosts = await Post.find({}); // fetch all users' posts
+  
+      res.render('welcome', {
+        name: user.username,
+        password: user.password,
+        posts: allPosts
+      });
+    } else {
+      res.send({ error: 'no user / password combination found' });
     }
-    else{
-        res.send({error: 'no user / password combination found'})
-    }
-
-})
+  });
 app.get('/list', async function(req, res) {
     try {
       // Query to get only 'username' and 'password'
@@ -78,9 +105,33 @@ app.get('/list', async function(req, res) {
 app.get("/home", function(req, res){
 res.send(req.session.username)
 } )
-app.get("/profile", function(req, res){
-    res.render ('profile',{'username':req.session.username})
-    } )
+
+app.post("/postconent", upload.single("carpicture"), async function (req, res) {
+    const { carbrand, carmodel, caryear, desfription } = req.body;
+    const { username } = req.session;
+    const carpicture = req.file.filename;
+
+    if (!carbrand || !carmodel || !caryear || !carpicture || !username) {
+      return res.status(400).send("Missing required fields or user session.");
+    }
+  
+    await Post.create({
+      username,
+      carbrand,
+      carmodel,
+      caryear,
+      carpicture,
+      desfription
+    });
+  
+    res.redirect("/profile");
+  });
+
+  app.get("/profile", async function(req, res){
+    const username = req.session.username;
+    const posts = await Post.find({ username });
+    res.render("profile", { username, posts });
+  });
 app.post('/action',async function(req, res){
      if (req.body.option==="edit"){
         res.render('fixprofile')
@@ -120,4 +171,20 @@ app.post('/fixprofile',async function(req,res){
         res.status(500).send('Update failed');
     }
 })
-app.listen(3000)
+
+app.post('/deletepost', async (req, res) => {
+  const { postId } = req.body;
+  const username = req.session.username;
+
+  const post = await Post.findOne({ _id: postId });
+
+  // Only allow user to delete their own post
+  if (post?.username === username) {
+    await Post.deleteOne({ _id: postId });
+    return res.redirect('/profile');
+  }
+
+  res.status(403).send('Unauthorized to delete this post');
+});
+
+app.listen(process.env.PORT || 3000);

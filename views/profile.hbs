@@ -1,8 +1,40 @@
+<link rel="stylesheet" href="/css/profile.css">
 <h1>{{username}} profile</h1>
-<form  action="/action" method="post">
-<h3>edit or delete profile</h3>
-<input type="text" name="option">
-<button type="submit">next</button>
 
-
+<!-- Profile Action Form -->
+<form action="/action" method="post">
+  <h3>Edit or Delete Profile</h3>
+  <input type="text" name="option" placeholder="edit or delete">
+  <button type="submit">next</button>
 </form>
+<ul>
+<li><a href="/">Logout</a></li>
+</ul>
+<!-- User's Posts -->
+<h2>Your Posts:</h2>
+{{#each posts}}
+  <div>
+    <h3>{{carbrand}} - {{carmodel}} ({{caryear}})</h3>
+    <img src="/{{carpicture}}" alt="car picture" width="200">
+    <p>{{desfription}}</p>
+
+    <!-- Post Deletion Form -->
+    <form method="post" action="/deletepost">
+      <input type="hidden" name="postId" value="{{_id}}">
+      <button type="submit">Delete This Post</button>
+    </form>
+  </div>
+{{/each}}
+
+
+<b>post conent</b>
+<form action="/postconent" method="post" enctype="multipart/form-data">
+  <input type="text" name="carbrand" placeholder="car brand" required> car brand<br>
+  <input type="text" name="carmodel" placeholder="car model" required> car model<br>
+  <input type="text" name="caryear" placeholder="car year" required> car year<br>
+  <input type="file" name="carpicture" accept="image/*" required> car picture<br>
+  <input type="text" name="desfription" placeholder="can give description"> can give description<br>
+  <button type="submit">submit</button>
+</form>
+
+<h6>post by {{username}}</h6>
