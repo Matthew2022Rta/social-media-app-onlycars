@@ -62,3 +62,4 @@ describe('Post Model', function () {
     });
   });
 });
+//added post tests
