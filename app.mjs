@@ -16,7 +16,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const mongoUrl = process.env.MONGO_URL;
-await mongoose.connect('mongmongodb+srv://matthew3555:OPdfZWGUmD4u0FiM@cluster0.z85d1lt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0oUrl);')
+await mongoose.connect(mongoUrl);
 
 
 if (!fs.existsSync('uploads')) {
