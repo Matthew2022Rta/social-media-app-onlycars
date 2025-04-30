@@ -1,0 +1,11 @@
+{
+    "name": "Node.js with MongoDB",
+    "features": {
+      "ghcr.io/devcontainers/features/node:1": {
+        "version": "18"
+      },
+      "ghcr.io/devcontainers/features/mongodb:1": {}
+    },
+    "forwardPorts": [3000],
+    "postCreateCommand": "npm install"
+  }
