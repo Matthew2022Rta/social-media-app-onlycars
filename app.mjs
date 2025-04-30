@@ -8,8 +8,9 @@ import hbs from 'hbs'
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-
-
+import qnaRouter from './src/qna.mjs';
+import passport from 'passport';       
+import './auth/passportConfig.js';  
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -31,20 +32,23 @@ const storage = multer.diskStorage({
 const app=express() ;
 app.set('view engine','hbs')
 app.use(express.urlencoded({extended:true}))
-
+app.use(express.json());
 app.use(express.static('public'));
-
   
 const sessionoptions={
          secret:"secret to saving session ID",
          saveUninitialized :false,
          resave:false
 }
+
 app.use(session(sessionoptions))
     // }
+    app.use(passport.initialize());
+app.use(passport.session());
  app.use('/uploads', express.static('uploads'));
-app.use(express.json())
 
+ app.use('/qna', qnaRouter);
+  
 app.get("/", async (req, res) => {
     const allPosts = await Post.find({});
     res.render("homepage", { posts: allPosts });
@@ -69,26 +73,45 @@ app.get('/login',function(req,res){
     res.render('signin')
 
 })
+app.post('/api/login',
+  passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureMessage: true
+  }),
+  async (req, res) => {
+    try {
+      // 
+      req.session.username = req.user.username;
+      req.session.password = req.user.password; // not ideal, but matches your current use
 
-app.post('/api/login', async (req, res) => {
-    const { username } = req.body;
-    const user = await User.findOne({ username });
-  
-    if (user) {
-      req.session.username = user.username;
-      req.session.password = user.password;
-  
-      const allPosts = await Post.find({}); // fetch all users' posts
-  
+      const allPosts = await Post.find({});
       res.render('welcome', {
-        name: user.username,
-        password: user.password,
+        name: req.user.username,
         posts: allPosts
       });
-    } else {
-      res.send({ error: 'no user / password combination found' });
+    } catch (err) {
+      res.status(500).send('Failed to load posts');
     }
   });
+// app.post('/api/login', async (req, res) => {
+//     const { username } = req.body;
+//     const user = await User.findOne({ username });
+  
+//     if (user) {
+//       req.session.username = user.username;
+//       req.session.password = user.password;
+  
+//       const allPosts = await Post.find({}); // fetch all users' posts
+  
+//       res.render('welcome', {
+//         name: user.username,
+//         password: user.password,
+//         posts: allPosts
+//       });
+//     } else {
+//       res.send({ error: 'no user / password combination found' });
+//     }
+//   });
 app.get('/list', async function(req, res) {
     try {
       // Query to get only 'username' and 'password'
@@ -106,27 +129,27 @@ app.get("/home", function(req, res){
 res.send(req.session.username)
 } )
 
-app.post("/postconent", upload.single("carpicture"), async function (req, res) {
-    const { carbrand, carmodel, caryear, desfription } = req.body;
-    const { username } = req.session;
-    const carpicture = req.file.filename;
+app.post('/postconent', upload.single("carpicture"), async function (req, res) {
+  const { carbrand, carmodel, caryear, desription } = req.body;
+  const username = req.user?.username; // ✅ from Passport
 
-    if (!carbrand || !carmodel || !caryear || !carpicture || !username) {
-      return res.status(400).send("Missing required fields or user session.");
-    }
-  
-    await Post.create({
-      username,
-      carbrand,
-      carmodel,
-      caryear,
-      carpicture,
-      desfription
-    });
-  
-    res.redirect("/profile");
+  const carpicture = req.file?.filename;
+
+  if (!carbrand || !carmodel || !caryear || !carpicture || !username) {
+    return res.status(400).send("Missing required fields or user session.");
+  }
+
+  await Post.create({
+    username,
+    carbrand,
+    carmodel,
+    caryear,
+    carpicture,
+    desription
   });
 
+  res.redirect("/profile");
+});
   app.get("/profile", async function(req, res){
     const username = req.session.username;
     const posts = await Post.find({ username });
@@ -171,7 +194,15 @@ app.post('/fixprofile',async function(req,res){
         res.status(500).send('Update failed');
     }
 })
+app.get('/welcome', (req, res) => {
+  if (!req.isAuthenticated()) return res.redirect('/login');
 
+  res.render('welcome', {
+    name: req.user.username,
+    password: req.user.password, // ⚠️ Consider removing this for security
+    posts: [], // you can fetch with Post.find({ username: req.user.username }) if needed
+  });
+});
 app.post('/deletepost', async (req, res) => {
   const { postId } = req.body;
   const username = req.session.username;
@@ -185,6 +216,9 @@ app.post('/deletepost', async (req, res) => {
   }
 
   res.status(403).send('Unauthorized to delete this post');
+});
+app.get('/session', (req, res) => {
+  res.json({ loggedIn: !!req.session.username });
 });
 
 app.listen(process.env.PORT || 3000);

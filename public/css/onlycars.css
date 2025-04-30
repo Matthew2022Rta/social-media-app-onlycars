@@ -1,0 +1,12 @@
+header {
+    background-color:#009cf7;   /* ✅ this fills it blue */
+    color: white;
+  padding: 20px;
+  text-align: center;
+  position: static; /* ✅ fixed instead of sticky */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 300;
+  }
+ 

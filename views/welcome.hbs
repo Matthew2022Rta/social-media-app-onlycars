@@ -1,7 +1,10 @@
 
-<link rel="stylesheet" href="/css/profile.css">
+<link rel="stylesheet" href="/css/onlycars.css">
+<header>
+
+  <img src="/images/logo.png" alt="Site Logo" width="400" />
+</header>
 <h1>hey welcome back {{name}}</h1>
-<h2>your password is {{password}}</h2>
 
 
 
@@ -13,6 +16,7 @@
   <li><a href="/">Home</a></li>
   <li><a href="/profile">Profile</a></li>
   <li><a href="#contact">Contact</a></li>
+    <li><a href="/qna.html">Public Forum</a></li>
 </ul>
 
 <h2>All Posts:</h2>
@@ -22,7 +26,7 @@
     <p><strong>Brand:</strong> {{carbrand}}</p>
     <p><strong>Model:</strong> {{carmodel}}</p>
     <p><strong>Year:</strong> {{caryear}}</p>
-<img src="/{{carpicture}}" width="200" alt="car photo">
+<img src="/uploads/{{carpicture}}" width="200" alt="car photo">
     <p>{{desfription}}</p>
   </div>
 {{/each}}

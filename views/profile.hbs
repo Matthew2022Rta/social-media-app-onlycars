@@ -1,4 +1,8 @@
-<link rel="stylesheet" href="/css/profile.css">
+<link rel="stylesheet" href="/css/onlycars.css">
+<header>
+
+  <img src="/images/logo.png" alt="Site Logo" width="400" />
+</header>
 <h1>{{username}} profile</h1>
 
 <!-- Profile Action Form -->
@@ -15,8 +19,8 @@
 {{#each posts}}
   <div>
     <h3>{{carbrand}} - {{carmodel}} ({{caryear}})</h3>
-    <img src="/{{carpicture}}" alt="car picture" width="200">
-    <p>{{desfription}}</p>
+   <img src="/uploads/{{carpicture}}" width="200" alt="car photo">
+    <p>{{desription}}</p>
 
     <!-- Post Deletion Form -->
     <form method="post" action="/deletepost">

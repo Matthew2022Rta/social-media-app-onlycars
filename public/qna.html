@@ -1,0 +1,29 @@
+<!-- public/qna.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Forum</title>
+  <link rel="stylesheet" href="/qna.css" />
+  <header>
+    <img src="/images/logo.png" alt="Site Logo" width="400" />
+    
+    </header>
+</head>
+<body>
+  <div class="container">
+    <a id="back-link" style="display:inline-block; margin-bottom: 10px; text-decoration: none; color: #007bff;" href="#">← Back</a>
+    <h1>Car Forum Q&A</h1>
+
+    <form id="ask-form">
+      <input type="text" id="question-input" placeholder="Ask a question..." required />
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="questions-container"></div>
+  </div>
+
+  <script type="module" src="/qna.js"></script>
+</body>
+</html>
