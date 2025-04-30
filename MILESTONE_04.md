@@ -21,11 +21,11 @@ https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment
 ## URL for form 1 (from previous milestone)
 
 (TODO: add link to a functioning form)
-http://localhost:3000/login
+http://localhost:3000/signup
 
 ## Special Instructions for Form 1
 
-just sign up through the http://localhost:3000/signup link with a password and username. Once you signed up, you will then login through the login page that renders next. Just input the credentials that you added( username and password )
+just sign up through the http://localhost:3000/signup link with a password and username. Once you signed up, you can see that you are able to login. Once you have input the credentials that you added( username and password ). You will be logged in
 
 ## URL for form 2 (for current milestone)
 
@@ -55,6 +55,7 @@ when you sign up with a username and password, you must enter the profile link, 
 ## First link to github line number(s) for constructor, HOF, etc.
 
 (TODO: add link to line number(s) here)
+https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta/blob/master/app.mjs#L142 - #L149
 
 ## Second link to github line number(s) for constructor, HOF, etc.
 
@@ -67,9 +68,13 @@ when you sign up with a username and password, you must enter the profile link, 
 ## Link to github line number(s) for schemas (db.js or models folder)
 
 (TODO: add link to schemas)
+https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta/tree/master/models
 
 ## Description of research topics above with points
 
+Implemented comprehensive unit tests using Mocha and Chai to validate Mongoose schemas for both `User` and `Post` models. Tests include required field checks, valid input handling, and edge case detection to ensure data integrity and schema enforcement.
+
+Integrated `passport.js` with the `passport-local` strategy to enable user login authentication. Implemented session management using `express-session`, along with `serializeUser` and `deserializeUser` methods to maintain persistent login state across routes securely.
 (TODO: add description of research topics here, including point values for each, one per line... for example: 2 points - applied and modified "Clean Blog" Bootstrap theme)
 
 ## Links to github line number(s) for research topics described above (one link per line)
@@ -77,8 +82,13 @@ when you sign up with a username and password, you must enter the profile link, 
 (TODO: add link to github line number(s), one per line for research topics ... for example, if using auth/passport, link to auth.js or where bulk of auth code is)
 
 Optional project notes
+passwords
+https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta/tree/master/auth
 
 ---
+
+test
+https://github.com/nyu-csci-ua-0467-001-002-spring-2025/final-project-deployment-Matthew2022Rta/tree/master/test
 
 (TODO: optionall add add any other information required for using/testing the final project)
 
