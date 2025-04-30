@@ -8,15 +8,15 @@ import hbs from 'hbs'
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import './config.mjs';
 import qnaRouter from './src/qna.mjs';
 import passport from 'passport';       
 import './auth/passportConfig.js';  
 import dotenv from 'dotenv';
 dotenv.config();
 
-const port = process.env.PORT || 3000;
-await mongoose.connect(process.env.MONGO_URL);
-
+const mongoUrl = process.env.MONGO_URL;
+await mongoose.connect(mongoUrl);
 
 
 if (!fs.existsSync('uploads')) {
@@ -221,4 +221,4 @@ app.get('/session', (req, res) => {
   res.json({ loggedIn: !!req.session.username });
 });
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT ?? 3000);
